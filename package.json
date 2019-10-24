@@ -1,0 +1,39 @@
+{
+  "name": "withcar",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/MaShin66/withcar_server.git",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/bcrypt": "^3.0.0",
+    "@types/cors": "^2.8.6",
+    "@types/helmet": "^0.0.44",
+    "@types/morgan": "^1.7.37",
+    "@types/node": "^12.11.5",
+    "babel-runtime": "^6.26.0",
+    "gql-merge": "^0.0.6",
+    "graphql-to-typescript": "^0.1.2",
+    "nodemon": "^1.19.4",
+    "ts-node": "^8.4.1",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.6.4"
+  },
+  "scripts": {
+    "dev": "cd src && nodemon --exec ts-node index.ts -e ts,graphql",
+    "pretypes": "gql-merge --out-file ./src/schema.graphql ./src/api/**/*.graphql",
+    "types": "graphql-to-typescript ./src/schema.graphql ./src/types/graph.d.ts"
+  },
+  "dependencies": {
+    "bcrypt": "^3.0.6",
+    "class-validator": "^0.10.2",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "graphql-tools": "^4.0.5",
+    "graphql-yoga": "^1.18.3",
+    "helmet": "^3.21.2",
+    "merge-graphql-schemas": "^1.7.0",
+    "morgan": "^1.9.1",
+    "pg": "^7.12.1",
+    "typeorm": "^0.2.20"
+  }
+}
