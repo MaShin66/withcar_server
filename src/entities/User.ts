@@ -7,19 +7,25 @@ import {
     Column, 
     CreateDateColumn, 
     Entity,
+    ManyToOne, 
+    OneToMany,
     PrimaryGeneratedColumn, 
-    UpdateDateColumn, 
+    UpdateDateColumn,
     } from "typeorm";
+import Chat from "./Chat";
+import Message from "./Message";
+import Ride from "./Ride";
+import Place from "./Place";
 
-const BCRYPT_ROUNDS = 10; // 몇 번을 암호화 할 것이냐
+const BCRYPT_ROUNDS = 10;
 
 @Entity()
 class User extends BaseEntity {
     @PrimaryGeneratedColumn() id: number;
 
-    @Column({ type: "text", unique: true})
+    @Column({ type: "text", nullable: true })
     @IsEmail()
-    email: string;
+    email: string | null;
 
     @Column({ type: "boolean", default: false })
     verifiedEmail: boolean;
@@ -63,6 +69,24 @@ class User extends BaseEntity {
     @Column({ type: "double precision", default: 0 })
     lastOrientation: number;
 
+    @Column({ type: "text", nullable: true })
+    fbId: string;
+
+    @ManyToOne(type => Chat, chat => chat.participants)
+    chat: Chat;
+
+    @OneToMany(type => Message, message => message.user)
+    messages: Message[];
+
+    @OneToMany(type => Ride, ride => ride.passenger)
+    rideAsPassenger: Ride[];
+
+    @OneToMany(type => Ride, ride => ride.driver)
+    rideAsDriver: Ride[];
+
+    @OneToMany(type => Place, place => place.user)
+    places: Place[] | any;
+
     @CreateDateColumn() createdAt: string;
 
     @UpdateDateColumn() updatedAt: string;
@@ -75,12 +99,10 @@ class User extends BaseEntity {
         return bcrypt.compare(password, this.password);
       }
     
-      // 비밀번호 서버 저장 하기 전에 insert와 update를 먼저 하기위한 함수
       @BeforeInsert()
       @BeforeUpdate()
       async savePassword(): Promise<void> {
-        if (this.password) {
-            // awiat 을 사용하는 이유는 해쉬 기다리기 위해
+        if (this.password) {            
           const hashedPassword = await this.hashPassword(this.password);
           this.password = hashedPassword;
         }
