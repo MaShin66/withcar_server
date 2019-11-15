@@ -11,8 +11,8 @@ type Query {
   GetMyPlaces: GetMyPlacesResponse!
   GetNearbyRide: GetNearbyRideResponse!
   GetRide(rideId: Int!): GetRideResponse!
+  GetMyProfile: GetMyProfileResponse!
   GetNearbyDrivers: GetNearbyDriversResponse!
-  GetNearbyRide: GetNearbyRideResponse!
 }
 
 type Subscription {
@@ -65,6 +65,7 @@ type Message {
   text: String!
   chatId: Int
   chat: Chat!
+  userId: Int
   user: User!
   createdAt: String!
   updatedAt: String
@@ -113,9 +114,6 @@ type GetNearbyRideResponse {
   ok: Boolean!
   error: String
   ride: Ride
-  ok: Boolean!
-  error: String
-  ride: Ride
 }
 
 type GetRideResponse {
@@ -142,8 +140,12 @@ type Ride {
   price: Float!
   distance: String!
   duration: String!
+  driverId: Int
   driver: User!
+  passengerId: Int!
   passenger: User!
+  chat: Chat
+  chatId: Int
   createdAt: String!
   updatedAt: String
 }
@@ -151,6 +153,7 @@ type Ride {
 type UpdateRideStatusResponse {
   ok: Boolean!
   error: String
+  rideId: Int
 }
 
 enum StatusOptions {
@@ -188,6 +191,12 @@ type FacebookConnectResponse {
   ok: Boolean!
   error: String
   token: String
+}
+
+type GetMyProfileResponse {
+  ok: Boolean!
+  error: String
+  user: User
 }
 
 type GetNearbyDriversResponse {
