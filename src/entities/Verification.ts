@@ -15,7 +15,8 @@ import {
   @Entity()
   class Verification extends BaseEntity {
     @PrimaryGeneratedColumn() id: number;
-  
+
+    // enum 은 순차적인 값을 가지는 것에만 사용가능
     @Column({ type: "text", enum: [PHONE, EMAIL] })
     target: verificationTarget;
   
@@ -37,9 +38,8 @@ import {
       if (this.target === PHONE) {
         this.key = Math.floor(Math.random() * 100000).toString();
       } else if (this.target === EMAIL) {
-        this.key = Math.random()
-          .toString(36)
-          .substr(2);
+        // EMAIL 이라면 더 길게 key 만들기
+        this.key = Math.random().toString(36).substr(2);
       }
     }
   }

@@ -12,7 +12,8 @@ const resolvers: Resolvers = {
     RequestRide: privateResolver(
       async (_, args: RequestRideMutationArgs, { req, pubSub }): Promise<RequestRideResponse> => {
         const user: User = req.user;
-        if (!user.isRiding && !user.isDriving) {
+        // if (!user.isRiding && !user.isDriving) {
+        if (!user.isDriving) {
           try {
             const ride = await Ride.create({ ...args, passenger: user }).save();
             pubSub.publish("rideRequest", { NearbyRideSubscription: ride });

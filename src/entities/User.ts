@@ -1,5 +1,5 @@
-import bcrypt from "bcrypt";
-import { IsEmail } from "class-validator";
+import bcrypt from 'bcrypt';
+import { IsEmail } from 'class-validator';
 import {
   BaseEntity,
   BeforeInsert,
@@ -10,12 +10,13 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn
-} from "typeorm";
-import Chat from "./Chat";
-import Message from "./Message";
-import Place from "./Place";
-import Ride from "./Ride";
+  } from 'typeorm';
+import Chat from './Chat';
+import Message from './Message';
+import Place from './Place';
+import Ride from './Ride';
 
+// 10번 암호화하기
 const BCRYPT_ROUNDS = 10;
 
 @Entity()
@@ -97,6 +98,8 @@ class User extends BaseEntity {
     return `${this.firstName} ${this.lastName}`;
   }
 
+  // 암호를 입력했을 때 서버에 저장된 암호와 같은 지 확인 boolean
+  // password: 입력받은 암호, this.password: 원래 저장된 암호
   public comparePassword(password: string): Promise<boolean> {
     return bcrypt.compare(password, this.password);
   }
@@ -105,6 +108,7 @@ class User extends BaseEntity {
   @BeforeUpdate()
   async savePassword(): Promise<void> {
     if (this.password) {
+      // await 을 쓰는 이유는 아래 hashPassword 함수가 10번 해쉬를 끝날 때 까지 기다려야해서
       const hashedPassword = await this.hashPassword(this.password);
       this.password = hashedPassword;
     }
