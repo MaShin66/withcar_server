@@ -1,9 +1,9 @@
-import { Between, getRepository } from "typeorm";
-import Ride from "../../../entities/Ride";
-import User from "../../../entities/User";
-import { GetNearbyRideResponse } from "../../../types/graph";
-import { Resolvers } from "../../../types/resolvers";
-import privateResolver from "../../../utils/privateResolver";
+import { Between, getRepository } from 'typeorm';
+import Ride from '../../../entities/Ride';
+import User from '../../../entities/User';
+import { GetNearbyRideResponse } from '../../../types/graph';
+import { Resolvers } from '../../../types/resolvers';
+import privateResolver from '../../../utils/privateResolver';
 
 const resolvers: Resolvers = {
   Query: {
@@ -44,7 +44,7 @@ const resolvers: Resolvers = {
         } else {
           return {
             ok: false,
-            error: "You are not a driver",
+            error: "운행중이 아닙니다",
             ride: null
           };
         }

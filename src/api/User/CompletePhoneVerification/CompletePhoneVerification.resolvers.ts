@@ -1,25 +1,23 @@
-import User from "../../../entities/User";
-import Verification from "../../../entities/Verification";
-import {
-  CompletePhoneVerificationMutationArgs,
-  CompletePhoneVerificationResponse
-} from "../../../types/graph";
-import { Resolvers } from "../../../types/resolvers";
-import createJWT from "../../../utils/createJWT";
+import User from '../../../entities/User';
+import Verification from '../../../entities/Verification';
+import { CompletePhoneVerificationMutationArgs, CompletePhoneVerificationResponse } from '../../../types/graph';
+import { Resolvers } from '../../../types/resolvers';
+import createJWT from '../../../utils/createJWT';
 
 const resolvers: Resolvers = {
   Mutation: {
     CompletePhoneVerification: async (_, args: CompletePhoneVerificationMutationArgs): Promise<CompletePhoneVerificationResponse> => {
+      
       const { phoneNumber, key } = args;
       try {
         const verification = await Verification.findOne({ payload: phoneNumber, key });
         if (!verification) {
           return {
             ok: false,
-            error: "Verification key not valid",
+            error: "인증키가 유효하지 않습니다",
             token: null
           };
-        } else {
+        } else { // 인증 키가 맞다면
           verification.verified = true;
           verification.save();
         }
@@ -31,6 +29,7 @@ const resolvers: Resolvers = {
         };
       }
 
+      // phoneNumber 가 이미 존재하는 user 가 있다면
       try {
         const user = await User.findOne({ phoneNumber });
         if (user) {
@@ -40,7 +39,7 @@ const resolvers: Resolvers = {
           return {
             ok: true,
             error: null,
-            token
+            token: token
           };
         } else {
           return {
@@ -56,6 +55,7 @@ const resolvers: Resolvers = {
           token: null
         };
       }
+      
     }
   }
 };

@@ -1,12 +1,9 @@
-import Chat from "../../../entities/Chat";
-import Ride from "../../../entities/Ride";
-import User from "../../../entities/User";
-import {
-  UpdateRideStatusMutationArgs,
-  UpdateRideStatusResponse
-} from "../../../types/graph";
-import { Resolvers } from "../../../types/resolvers";
-import privateResolver from "../../../utils/privateResolver";
+import Chat from '../../../entities/Chat';
+import Ride from '../../../entities/Ride';
+import User from '../../../entities/User';
+import { UpdateRideStatusMutationArgs, UpdateRideStatusResponse } from '../../../types/graph';
+import { Resolvers } from '../../../types/resolvers';
+import privateResolver from '../../../utils/privateResolver';
 
 const resolvers: Resolvers = {
   Mutation: {
@@ -15,18 +12,16 @@ const resolvers: Resolvers = {
         if (user.isDriving) {
           try {
             let ride: Ride | undefined;
-            // status 가 ACCEPTED 라면
-            if (args.status === "ACCEPTED") {
-              // id 와 rideId 이며 status 가 REQUESTING 인 걸 찾는다.
-              ride = await Ride.findOne(
+            if (args.status === "ACCEPTED") { // status 가 ACCEPTED 인 요청이 들어온건가..?
+              ride = await Ride.findOne( // id 가 rideId 이며 status 가 REQUESTING 인 걸 찾는다.
                 {
                   id: args.rideId,
                   status: "REQUESTING"
                 },
                 { relations: ["passenger", "driver"] }
               );
-              // ride 가 있다면 ride 의 driver 를 user 로 설정
-              if (ride) {
+
+              if (ride) { // ride 가 있다면 ride 의 driver 를 user 로 설정
                 ride.driver = user;
                 user.isTaken = true;
                 await user.save();
@@ -37,7 +32,7 @@ const resolvers: Resolvers = {
                 ride.chat = chat;
                 await ride.save();
               }
-            } 
+            }
             // 운행 끝나고 isRiding 바꾸기 위해 새로 추가한 부분..
             // else if (args.status ===  "FINISHED") {
             //   ride = await Ride.findOne(
@@ -57,13 +52,15 @@ const resolvers: Resolvers = {
             //   }
             // } 
             // 운행 끝나고 isRiding 바꾸기 위해 새로 추가한 부분..
-            else {
+
+            else { // args.status === "ACCEPTED" 가 아니라면
               ride = await Ride.findOne({
                 id: args.rideId,
                 driver: user
               }, {relations: ["passenger", "driver"]});
             }
-            if (ride) {
+            
+            if (ride) { // 만약 그냥 ride 가 있다면
               ride.status = args.status;
               ride.save();
               pubSub.publish("rideUpdate", { RideStatusSubscription: ride });
@@ -86,10 +83,10 @@ const resolvers: Resolvers = {
               rideId: null
             };
           }
-        } else {
+        } else { // user.isDriving 이 없다면
           return {
             ok: false,
-            error: "You are not driving",
+            error: "드라이버 모드가 아닙니다",
             rideId: null
           };
         }

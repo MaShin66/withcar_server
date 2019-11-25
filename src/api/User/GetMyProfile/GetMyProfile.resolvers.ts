@@ -1,8 +1,8 @@
-import { Resolvers } from "../../../types/resolvers";
-import privateResolver from "../../../utils/privateResolver";
+import { Resolvers } from '../../../types/resolvers';
+import privateResolver from '../../../utils/privateResolver';
 
 const resolvers: Resolvers = {
-  Query: {
+  Query: { // privateResolver 함수를 먼저 성공하면 그 다음 진행 ()
     GetMyProfile: privateResolver(async (_, __, { req }) => {
       const { user } = req;
       return {
@@ -13,4 +13,5 @@ const resolvers: Resolvers = {
     })
   }
 };
+
 export default resolvers;

@@ -35,7 +35,7 @@ import {
   
     @BeforeInsert()
     createKey(): void {
-      if (this.target === PHONE) {
+      if (this.target === PHONE) { // 여기 위의 있는 값이라 this 사용
         this.key = Math.floor(Math.random() * 100000).toString();
       } else if (this.target === EMAIL) {
         // EMAIL 이라면 더 길게 key 만들기
