@@ -1,8 +1,8 @@
-import { ConnectionOptions } from "typeorm";
+import { ConnectionOptions } from 'typeorm';
 
 const connectionOptions: ConnectionOptions = {
   type: "postgres",
-  database: "withcar",
+  database: process.env.DB_NAME || "withcar",
   synchronize: true,
   logging: true,
   entities: ["entities/**/*.*"],
