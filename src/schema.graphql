@@ -143,7 +143,7 @@ type Ride {
   driverId: Int
   driver: User
   passengerId: Int!
-  passenger: User
+  passenger: User!
   chat: Chat
   chatId: Int
   createdAt: String!
