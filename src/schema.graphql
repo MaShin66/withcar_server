@@ -157,11 +157,11 @@ type UpdateRideStatusResponse {
 }
 
 enum StatusOptions {
-  ACCEPTED
-  FINISHED
-  CANCELED
   REQUESTING
+  ACCEPTED
+  CANCELED
   ONROUTE
+  FINISHED
 }
 
 type CompleteEmailVerificationResponse {
